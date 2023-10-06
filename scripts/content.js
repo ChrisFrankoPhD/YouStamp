@@ -1,5 +1,5 @@
 (() => {
-    let ytLeftControls, ytStream;
+    let ytRightControls, ytStream;
     let currentVideo = "";
     let currentVideoStamps = []
 
@@ -21,9 +21,9 @@
     };
 
     async function newVideoLoaded() {
-        currentVideoStamps = await getAllStamps();
-        // let stampBtn = document.getElementsByClassName("stamp-btn")[0]
         console.log("new video loaded");
+        currentVideoStamps = await getAllStamps();
+
         if (!document.getElementsByClassName("stamp-btn")[0]) {
             const stampBtn = document.createElement("img");
 
@@ -31,10 +31,10 @@
             stampBtn.className = "ytp-button " + "stamp-btn";
             stampBtn.title = "Save current timestamp";
 
-            ytLeftControls = document.getElementsByClassName("ytp-left-controls")[0];
+            ytRightControls = document.getElementsByClassName("ytp-right-controls")[0];
             ytStream = document.getElementsByClassName("video-stream")[0];
 
-            ytLeftControls.appendChild(stampBtn); 
+            ytRightControls.prepend(stampBtn); 
             // stampBtn.addEventListener("click" )
             stampBtn.addEventListener("click", addNewStampHandler);
         }
@@ -50,6 +50,7 @@
         currentVideoStamps = await getAllStamps();
 
         console.log(newStamp);
+        console.log(currentVideoStamps);
 
         chrome.storage.sync.set({
             [currentVideo]: JSON.stringify([...currentVideoStamps, newStamp].sort((a, b) => a.time - b.time))
