@@ -1,70 +1,81 @@
 (() => {
-    let ytRightControls, ytStream;
-    let currentVideo = "";
-    let currentVideoStamps = []
+    let ytRightControls, ytStream, currVideoId;
 
-    chrome.runtime.onMessage.addListener((obj, sender, response) => {
-        const { type, value, videoID } = obj;
+    chrome.runtime.onMessage.addListener((req, sender, res) => {
+        console.log("content onMessage");
+        const { type, videoId, time } = req;
+        switch (type) {
+            case "NEW":
+                console.log('type = new');
+                currVideoId = videoId
+                newVideoLoaded().then(() => {res("success")})
+                break;
+            case "PLAY":
+                console.log('type = play');
+                console.log(time);
+                try {
+                    ytStream.currentTime = time;
+                    console.log(`ytStream.currentTime set to ${time}`);
+                } catch (error) {
+                    console.error(`error setting YT steam time: ${error.message}`);
+                }
+                break;
 
-        if (type === "NEW") {
-            currentVideo = videoId;
-            newVideoLoaded();
+            default:
+                break;
         }
+        return true
     });
-
-    function getAllStamps() {
-        return new Promise((resolve) => {
-            chrome.storage.sync.get([currentVideo], (obj) => {
-                resolve(obj[currentVideo] ? JSON.parse(obj[currentVideo]) : [])
-            });
-        });
-    };
 
     async function newVideoLoaded() {
         console.log("new video loaded");
-        currentVideoStamps = await getAllStamps();
-
-        if (!document.getElementsByClassName("stamp-btn")[0]) {
-            const stampBtn = document.createElement("img");
-
-            stampBtn.src = chrome.runtime.getURL("../assets/stampBtn.PNG");
-            stampBtn.className = "ytp-button " + "stamp-btn";
-            stampBtn.title = "Save current timestamp";
-
-            ytRightControls = document.getElementsByClassName("ytp-right-controls")[0];
-            ytStream = document.getElementsByClassName("video-stream")[0];
-
-            ytRightControls.prepend(stampBtn); 
-            // stampBtn.addEventListener("click" )
-            stampBtn.addEventListener("click", addNewStampHandler);
+        try {
+            if (!document.getElementsByClassName("stamp-btn")[0]) {
+                console.log('document has no stamp button');
+                const stampBtn = document.createElement("img");
+    
+                stampBtn.src = chrome.runtime.getURL("../assets/stampBtn.PNG");
+                stampBtn.className = "ytp-button " + "stamp-btn";
+                stampBtn.title = "Save current timestamp";
+    
+                ytRightControls = document.getElementsByClassName("ytp-right-controls")[0];
+                ytStream = document.getElementsByClassName("video-stream")[0];
+    
+                ytRightControls.prepend(stampBtn); 
+                // stampBtn.addEventListener("click" )
+                stampBtn.addEventListener("click", addNewStampHandler);
+            } else {
+                console.log('document already has a stamp button');
+            }
+        } catch (error) {
+            console.error(`error in newVideoLoaded: ${error.message}`);
         }
-    }
+        console.log("newVideoLoaded finished successfully");        
+    } 
 
     async function addNewStampHandler() {
-        const currentTime = ytStream.currentTime;
-        const newStamp = {
-            time: currentTime,
-            desc: `Stamp @ ${formatTime(currentTime)}`
+        console.log("stamp Clicked");
+        const req = {
+            type: "STAMP",
+            time: ytStream.currentTime,
+            videoId: currVideoId
         };
-
-        currentVideoStamps = await getAllStamps();
-
-        console.log(newStamp);
-        console.log(currentVideoStamps);
-
-        chrome.storage.sync.set({
-            [currentVideo]: JSON.stringify([...currentVideoStamps, newStamp].sort((a, b) => a.time - b.time))
-        });
+        const currStamps = await sendMessagePromise(req)
+        console.log(currStamps);
     }
-
 
     newVideoLoaded();
 })();
 
-function formatTime(seconds) {
-    let date = new Date(0);
-    date.setSeconds(seconds);
-
-    return date.toISOString().substring(11, 19);
+function sendMessagePromise(req) {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage((req), response => {
+            if (response) {
+                resolve(response);
+            } else {
+                reject("no response recieved");
+            };
+        });
+    });
 };
 
