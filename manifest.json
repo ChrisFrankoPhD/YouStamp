@@ -10,20 +10,20 @@
     "content_scripts": [
       {
         "matches": ["https://*.youtube.com/*"],
-        "js": ["contentScript.js"]
+        "js": ["scripts/content.js"]
       }
     ],
     "web_accessible_resources": [
-      {
-        "resources": [
-          "assets/bookmark.png",
-          "assets/play.png",
-          "assets/delete.png",
-          "assets/save.png"
-        ],
-        "matches": ["https://*.youtube.com/*"]
-      }
-    ],
+        {
+          "resources": [
+            "assets/stampBtn.PNG",
+            "assets/play.png",
+            "assets/delete.png",
+            "assets/save.png"
+          ],
+          "matches": ["https://*.youtube.com/*"]
+        }
+      ],
     "action": {
       "default_icon": {
         "16": "assets/ext-icon.png",
