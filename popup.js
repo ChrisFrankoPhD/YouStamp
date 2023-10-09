@@ -117,6 +117,8 @@ const onDelete = async (e) => {
   // remove the stamp HTML from the popup
   const stampToDelete = document.getElementById(`stamp-${time}`);
   stampToDelete.remove();
+
+  renderStamps(response, videoId)
 };
 
 // this gets called when the DOM is loaded,
