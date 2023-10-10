@@ -68,8 +68,6 @@
     const currStamps = await sendMessagePromise(req);
     // console.log(currStamps);
   }
-  // we call newVideoLoaded again at end of script, had issues where the button would not load if the page was simply refreshed, seems to solve it
-  newVideoLoaded();
 })();
 
 // abstracted function to send message to the worker
