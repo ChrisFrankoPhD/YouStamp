@@ -10,12 +10,12 @@
 - once the extension has been uploaded to chrome, navigate to any youtube video link hosted on the YouTube website (for example: https://www.youtube.com/watch?v=6Q6qHRHTTPg)
 - The YouStamp time line button should appear in the video control buttons in the youtube player once the page has loaded:
 
-    ![image](./../../LandingPage/images/YouStamp/youStampVideoPlayer.png "YouStamp Video Player")
+    ![image](https://i.ibb.co/7KLwsCm/you-Stamp-Video-Player.png "YouStamp Video Player")
 
 - click the timeline button to save a new Stamp at the current video time
 - after you have saved a time stamp, you can open the extension pupup by clicking on the extensions toolbar in chrome, and either pinning the YouStamp extension icon, or opening it directly from the extensions dropdown
 
-    ![image](./../../LandingPage/images/YouStamp/youStampPopup.png "YouStamp Popup")
+    ![image](https://i.ibb.co/qmnNCnJ/you-Stamp-Popup.png "YouStamp Popup")
 
 - in the YouStamp popup, click the play button of the given extension to make the YouTube video immediately jump to the given timestamp
 - You may also delete Stamps with the delete button
