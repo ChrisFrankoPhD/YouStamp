@@ -1,4 +1,5 @@
 // this is the extensions service-worker, it runs in the background and responds to events to perform tasks for the extension, it does not have access to the DOM so can't modify the webpage
+
 // here we see it is used as an event listener, we call the worker with different event types and perform tass such as adding or removing or fetching stamps to storage,
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   // console.log("background onUpdated listener");
